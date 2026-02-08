@@ -1,0 +1,77 @@
+# dependencies (bun install)
+node_modules
+
+# output
+out
+dist
+*.tgz
+
+# code coverage
+coverage
+*.lcov
+
+# logs
+logs
+*.log
+report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local
+
+# caches
+.eslintcache
+.cache
+*.tsbuildinfo
+
+# IntelliJ based IDEs
+.idea
+
+# Finder (MacOS) folder config
+.DS_Store
+
+# macOS system files
+._*
+.AppleDouble
+.LSOverride
+.Spotlight-V100
+.Trashes
+
+# Additional build artifacts
+build/
+lib/
+.tmp/
+tmp/
+
+# Tool caches
+.vite/
+.turbo/
+.rollup.cache/
+.parcel-cache/
+.swc/
+
+# Lockfiles (keep pnpm-lock.yaml tracked)
+package-lock.json
+yarn.lock
+
+# Package manager debug logs
+.pnpm-debug.log*
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# VS Code (keep common workspace recommendations)
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+
+# Testing
+.nyc_output/
+
+# Storybook
+storybook-static/
