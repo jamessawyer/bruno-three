@@ -1,0 +1,18 @@
+packages:
+  - 'packages/*'
+
+catalog:
+  # 核心库
+  three: ^0.182.0
+  tweakpane: ^4.0.5      # 添加到通用目录
+  typescript: ^5.7.0
+  
+  # 工具链 - 使用最新的 Vite 7
+  vite: ^7.3.1
+  oxlint: ^1.43.0
+  oxfmt: ^0.28.0
+  
+  # 类型定义
+  "@types/three": ^0.182.0
+  "@tweakpane/core": latest
+  "@types/node": ^22.0.0

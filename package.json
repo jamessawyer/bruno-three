@@ -1,12 +1,27 @@
 {
   "name": "bruno-three",
-  "module": "index.ts",
   "type": "module",
   "private": true,
-  "devDependencies": {
-    "@types/bun": "latest"
+  "scripts": {
+    "preinstall": "npx only-allow pnpm",
+    "lint": "bunx oxlint --deny-build",
+    "fmt": "bunx oxfmt --write .",
+    "dev": "pnpm -r --parallel dev",
+    "build": "pnpm -r build",
+    "new": "bun scripts/create-chapter.ts"
   },
-  "peerDependencies": {
-    "typescript": "^5"
+  "dependencies": {
+
+  },
+  "devDependencies": {
+    "@types/bun": "latest",
+    "typescript": "catalog:",
+    "oxlint": "catalog:",
+    "oxfmt": "catalog:",
+    "vite": "catalog:",
+    "tweakpane": "catalog:",
+    "three": "catalog:",
+    "@types/three": "catalog:",
+    "@tweakpane/core": "catalog:"
   }
 }
