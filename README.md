@@ -1,15 +1,25 @@
 # bruno-three
 
-To install dependencies:
+安装依赖：
 
 ```bash
-bun install
+pnpm install
 ```
 
-To run:
+运行指定项目：
 
 ```bash
-bun run index.ts
+pnpm --filter @play/ch01 dev
 ```
 
-This project was created using `bun init` in bun v1.3.4. [Bun](https://bun.com) is a fast all-in-one JavaScript runtime.
+格式化代码：
+
+```bash
+pnpm fmt
+```
+
+检查代码格式是否正确：
+
+```bash
+pnpm fmt:check
+```
