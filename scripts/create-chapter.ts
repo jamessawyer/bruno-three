@@ -19,31 +19,40 @@ const pkgJson = {
   private: true,
   type: "module",
   scripts: {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    dev: "vite",
+    build: "vite build",
+    preview: "vite preview",
   },
   dependencies: {
-    "three": "catalog:",
-    "tweakpane": "catalog:" // 引入 Tweakpane
+    three: "catalog:",
+    tweakpane: "catalog:", // 引入 Tweakpane
   },
   devDependencies: {
-    "vite": "catalog:",
+    vite: "catalog:",
     "@types/three": "catalog:",
-    "typescript": "catalog:",
-    "@tweakpane/core": "catalog:"
-  }
+    typescript: "catalog:",
+    "@tweakpane/core": "catalog:",
+  },
 };
 await write(join(targetDir, "package.json"), JSON.stringify(pkgJson, null, 2));
 
 // 3. 生成 tsconfig.json
-await write(join(targetDir, "tsconfig.json"), JSON.stringify({
-  extends: "../../tsconfig.base.json",
-  include: ["src"]
-}, null, 2));
+await write(
+  join(targetDir, "tsconfig.json"),
+  JSON.stringify(
+    {
+      extends: "../../tsconfig.base.json",
+      include: ["src"],
+    },
+    null,
+    2,
+  ),
+);
 
 // 4. 生成 HTML
-await write(join(targetDir, "index.html"), `
+await write(
+  join(targetDir, "index.html"),
+  `
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -56,10 +65,13 @@ await write(join(targetDir, "index.html"), `
     <canvas id="app"></canvas>
     <script type="module" src="/src/main.ts"></script>
   </body>
-</html>`);
+</html>`,
+);
 
 // 5. 生成包含 Tweakpane 的 main.ts 模板
-await write(join(targetDir, "src/main.ts"), `
+await write(
+  join(targetDir, "src/main.ts"),
+  `
 import * as THREE from 'three';
 import { Pane } from 'tweakpane';
 
@@ -107,7 +119,8 @@ window.addEventListener('resize', () => {
   camera.updateProjectionMatrix();
   renderer.setSize(window.innerWidth, window.innerHeight);
 });
-`);
+`,
+);
 
 console.log(`\n🚀 练习 "${name}" 已就绪！`);
 console.log(`👉 运行: pnpm install && cd packages/${name} && bun dev`);
