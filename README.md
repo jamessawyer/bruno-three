@@ -23,3 +23,9 @@ pnpm fmt
 ```bash
 pnpm fmt:check
 ```
+
+生成新的项目：
+
+```bash
+pnpm new ch01
+```
