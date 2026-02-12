@@ -12,16 +12,9 @@
     "build": "pnpm -r build",
     "new": "bun scripts/create-chapter.ts"
   },
-  "dependencies": {},
   "devDependencies": {
-    "@tweakpane/core": "catalog:",
     "@types/bun": "latest",
-    "@types/three": "catalog:",
     "oxfmt": "catalog:",
-    "oxlint": "catalog:",
-    "three": "catalog:",
-    "tweakpane": "catalog:",
-    "typescript": "catalog:",
-    "vite": "catalog:"
+    "oxlint": "catalog:"
   }
 }
