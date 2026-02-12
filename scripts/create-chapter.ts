@@ -26,6 +26,7 @@ const pkgJson = {
   dependencies: {
     three: "catalog:",
     tweakpane: "catalog:", // 引入 Tweakpane
+    gsap: "catalog:",
   },
   devDependencies: {
     vite: "catalog:",
