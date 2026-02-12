@@ -12,6 +12,9 @@ catalogs:
     '@types/three':
       specifier: ^0.182.0
       version: 0.182.0
+    gsap:
+      specifier: 3.14.2
+      version: 3.14.2
     oxfmt:
       specifier: ^0.32.0
       version: 0.32.0
@@ -60,6 +63,9 @@ importers:
       '@types/three':
         specifier: 'catalog:'
         version: 0.182.0
+      gsap:
+        specifier: 'catalog:'
+        version: 3.14.2
       typescript:
         specifier: 'catalog:'
         version: 5.9.3
@@ -662,6 +668,9 @@ packages:
     engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
     os: [darwin]
 
+  gsap@3.14.2:
+    resolution: {integrity: sha512-P8/mMxVLU7o4+55+1TCnQrPmgjPKnwkzkXOK1asnR9Jg2lna4tEY5qBJjMmAaOBDDZWtlRjBXjLa0w53G/uBLA==}
+
   meshoptimizer@0.22.0:
     resolution: {integrity: sha512-IebiK79sqIy+E4EgOr+CAw+Ke8hAspXKzBd0JdgEmPHiAwmvEj2S4h1rfvo+o/BnfEYd/jAOg5IeeIjzlzSnDg==}
 
@@ -1109,6 +1118,8 @@ snapshots:
 
   fsevents@2.3.3:
     optional: true
+
+  gsap@3.14.2: {}
 
   meshoptimizer@0.22.0: {}
 

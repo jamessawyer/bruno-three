@@ -14,6 +14,7 @@
   "devDependencies": {
     "@tweakpane/core": "catalog:",
     "@types/three": "catalog:",
+    "gsap": "catalog:",
     "typescript": "catalog:",
     "vite": "catalog:"
   }
