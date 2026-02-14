@@ -33,6 +33,7 @@ window.addEventListener("resize", () => {
   camera.updateProjectionMatrix(); // 更新相机投影矩阵
 
   renderer.setSize(sizes.width, sizes.height); // 更新渲染器大小
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 });
 
 // Camera
@@ -53,6 +54,9 @@ const renderer = new T.WebGLRenderer({
 });
 
 renderer.setSize(sizes.width, sizes.height);
+// 如果 pixelRatio 设置大于2 会消耗更多性能，但实际效果也没那么明显
+// 因此最大设置为2即可
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 const tick = () => {
   controls.update();
