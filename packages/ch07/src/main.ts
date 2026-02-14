@@ -1,15 +1,6 @@
 import * as T from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 
-const cursor = {
-  x: 0,
-  y: 0,
-};
-window.addEventListener("mousemove", (evt: MouseEvent) => {
-  cursor.x = evt.clientX / sizes.width - 0.5;
-  cursor.y = -(evt.clientY / sizes.height - 0.5);
-});
-
 // Canvas
 const canvas = document.getElementById("app") as HTMLCanvasElement;
 
@@ -29,9 +20,20 @@ scene.add(axisHelper);
 
 // Sizes
 const sizes = {
-  width: 800,
-  height: 600,
+  width: window.innerWidth,
+  height: window.innerHeight,
 };
+
+window.addEventListener("resize", () => {
+  sizes.width = window.innerWidth;
+  sizes.height = window.innerHeight;
+
+  // 更新相机
+  camera.aspect = sizes.width / sizes.height; // 更新宽高比
+  camera.updateProjectionMatrix(); // 更新相机投影矩阵
+
+  renderer.setSize(sizes.width, sizes.height); // 更新渲染器大小
+});
 
 // Camera
 
