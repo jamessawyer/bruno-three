@@ -24,6 +24,11 @@ const sizes = {
   height: window.innerHeight,
 };
 
+// resize 事件
+// 1. 调整画布尺寸
+// 2. 更新相机
+// 3. 更新渲染器
+// 4. 更新像素比
 window.addEventListener("resize", () => {
   sizes.width = window.innerWidth;
   sizes.height = window.innerHeight;
@@ -34,6 +39,16 @@ window.addEventListener("resize", () => {
 
   renderer.setSize(sizes.width, sizes.height); // 更新渲染器大小
   renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+});
+
+// 进入和退出全屏
+window.addEventListener("dblclick", () => {
+  if (document.fullscreenElement) {
+    document.exitFullscreen();
+  } else {
+    // 对特定元素申请进入全屏（比如video, canvas等）
+    canvas?.requestFullscreen();
+  }
 });
 
 // Camera
