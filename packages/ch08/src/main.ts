@@ -11,7 +11,29 @@ const scene = new T.Scene();
 const group = new T.Group();
 scene.add(group);
 
-const cube1 = new T.Mesh(new T.BoxGeometry(1, 1, 1), new T.MeshBasicMaterial({ color: 0xff0000 }));
+// 手动创建一份随机顶点数据，并塞进 BufferGeometry 里，用于后续渲染（通常会形成很多随机小三角形）
+const geometry = new T.BufferGeometry(); // 创建一个空几何体，里面还没有任何顶点数据
+
+const count = 50; // 生成 50 个三角形
+// 每个三角形 3 个顶点，每个顶点 3 个坐标
+const positionArray = new Float32Array(count * 3 * 3); // 50个顶点，每个顶点有3个坐标
+
+for (let i = 0; i < count * 3 * 3; i++) {
+  // -0.5 - 0.5 之间
+  positionArray[i] = Math.random() - 0.5;
+}
+// 把一维数组解释为“每 3 个数是一组顶点坐标”
+const positionAttribute = new T.BufferAttribute(positionArray, 3);
+// 将这组顶点绑定到几何体的 position 属性
+// 这样几何体就有了可渲染的顶点数据
+geometry.setAttribute("position", positionAttribute);
+
+const material = new T.MeshBasicMaterial({
+  color: 0xff0000,
+  wireframe: true,
+});
+const cube1 = new T.Mesh(geometry, material);
+
 group.add(cube1);
 
 // Axis Helper
