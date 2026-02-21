@@ -1,5 +1,7 @@
+import gsap from "gsap";
 import * as T from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { Pane } from "tweakpane";
 
 // Canvas
 const canvas = document.getElementById("app") as HTMLCanvasElement;
@@ -8,13 +10,79 @@ const canvas = document.getElementById("app") as HTMLCanvasElement;
 const scene = new T.Scene();
 
 // Objects
-const group = new T.Group();
-scene.add(group);
+const geometry = new T.BoxGeometry(1, 1, 1);
+const material = new T.MeshBasicMaterial({ color: 0xff0000, wireframe: true });
+const mesh = new T.Mesh(geometry, material);
+scene.add(mesh);
 
-const cube1 = new T.Mesh(new T.BoxGeometry(1, 1, 1), new T.MeshBasicMaterial({ color: 0xff0000 }));
-group.add(cube1);
+// --- Tweakpane 调试面板 ---
+const pane = new Pane();
+const cubeFolder = pane.addFolder({
+  title: "Cube控制",
+});
 
-// Axis Helper
+cubeFolder.addBinding(mesh.position, "y", {
+  min: -3,
+  max: 3,
+  label: "Y方向",
+});
+
+cubeFolder.addBinding(mesh, "visible");
+// 线框模式
+cubeFolder.addBinding(material, "wireframe");
+// 颜色
+// https://tweakpane.github.io/docs/input-bindings/#color
+// 创建颜色对象用于Tweakpane
+const colorObject = {
+  color: "#" + material.color.getHexString(),
+};
+
+cubeFolder
+  .addBinding(colorObject, "color", {
+    picker: "inline",
+    expanded: true,
+    // view 设置为 'color' 表示得到hex颜色值
+    view: "color",
+  })
+  .on("change", (ev) => {
+    material.color.set(ev.value);
+  });
+
+// 添加按钮，旋转一圈
+cubeFolder
+  .addButton({
+    title: "Rotation",
+  })
+  .on("click", () => {
+    gsap.to(mesh.rotation, {
+      duration: 1,
+      y: mesh.rotation.y + Math.PI * 2,
+    });
+  });
+
+// 线框细分widthSegments, heightSegments, depthSegments
+cubeFolder
+  .addBinding(
+    {
+      subdivision: 2,
+    },
+    "subdivision",
+    {
+      min: 1,
+      max: 10,
+      step: 1,
+    },
+  )
+  .on("change", (ev) => {
+    // 只在用户完成交互时执行（ev.last 为 true）
+    // 用于实现 lil-gui 中 `finishChange` 效果
+    if (ev.last) {
+      // 创建之前先销毁
+      mesh.geometry.dispose();
+      mesh.geometry = new T.BoxGeometry(1, 1, 1, ev.value, ev.value, ev.value);
+    }
+  });
+
 const axisHelper = new T.AxesHelper(2);
 scene.add(axisHelper);
 
@@ -56,7 +124,7 @@ window.addEventListener("dblclick", () => {
 // 透视相机
 const camera = new T.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100);
 camera.position.z = 3;
-camera.lookAt(group.position);
+camera.lookAt(mesh.position);
 scene.add(camera);
 
 // Controls
