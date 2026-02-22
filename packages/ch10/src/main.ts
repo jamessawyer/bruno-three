@@ -1,87 +1,91 @@
-import gsap from "gsap";
 import * as T from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { Pane } from "tweakpane";
 
 // Canvas
 const canvas = document.getElementById("app") as HTMLCanvasElement;
+
+// --- 加载纹理 ---
+
+/** 纹理加载 - 方式1 */
+// const image = new Image();
+// const texture = new T.Texture(image);
+// image.onload = () => {
+//   texture.needsUpdate = true;
+// };
+// image.src = "/textures/door/color.jpg";
+
+/** 纹理加载 - 方式2 */
+const loadingManager = new T.LoadingManager();
+
+loadingManager.onStart = () => {
+  console.log("onStart");
+};
+loadingManager.onLoad = () => {
+  console.log("onLoad");
+};
+loadingManager.onProgress = () => {
+  console.log("onProgress");
+};
+loadingManager.onError = () => {
+  console.log("onError");
+};
+
+const textureLoader = new T.TextureLoader(loadingManager);
+const minecraftTexture = textureLoader.load("/textures/minecraft.png");
+const checkerboardTexture = textureLoader.load("/textures/checkerboard-8x8.png");
+const colorTexture = textureLoader.load("/textures/door/color.jpg");
+const alphaTexture = textureLoader.load("/textures/door/alpha.jpg");
+const heightTexture = textureLoader.load("/textures/door/height.jpg");
+const normalTexture = textureLoader.load("/textures/door/normal.jpg");
+const ambientOcclusionTexture = textureLoader.load("/textures/door/ambientOcclusion.jpg");
+const roughnessTexture = textureLoader.load("/textures/door/roughness.jpg");
+const metalnessTexture = textureLoader.load("/textures/door/metalness.jpg");
+
+colorTexture.repeat.x = 2; // 控制 U(水平) 方向的重复
+colorTexture.repeat.y = 3; // 控制 V(垂直) 方向的重复
+// S 代表水平 (U/X) 轴的包裹模式
+colorTexture.wrapS = T.RepeatWrapping; // 设置 U(水平) 方向的重复方式
+// T 代表垂直 (V/Y) 轴的包裹模式
+colorTexture.wrapT = T.RepeatWrapping; // 设置 V(垂直) 方向的重复方式
+
+colorTexture.offset.x = 0.5;
+colorTexture.offset.y = 0.5;
+
+colorTexture.rotation = Math.PI * 0.25;
+colorTexture.center.x = 0.5;
+colorTexture.center.y = 0.5;
+
+// 如果不需要mipmapping 可以关闭 mipmap 提升性能
+colorTexture.generateMipmaps = false;
+// 缩小时使用的纹理（默认值 THREE.LinearMipmapLinearFilter,即开启mipmapping，设置为其它值将禁用mipmapping）
+colorTexture.minFilter = T.NearestFilter;
+// 放大时使用的纹理
+colorTexture.magFilter = T.NearestFilter;
+
+// const texture = textureLoader.load(
+//   "/textures/door/color.jpg",
+//   () => {
+//     console.log("onLoaded");
+//   },
+//   () => {
+//     // 这个 progress 没有效果，实际项目中一般不会用到这个
+//     // 一般用到的是 LoadingManager
+//     console.log("onProgress");
+//   },
+//   () => {
+//     console.log("onError");
+//   },
+// );
 
 // --- 初始化场景 ---
 const scene = new T.Scene();
 
 // Objects
 const geometry = new T.BoxGeometry(1, 1, 1);
-const material = new T.MeshBasicMaterial({ color: 0xff0000 });
+// console.log("attributes", geometry.attributes); // 可以看到uv属性
+const material = new T.MeshBasicMaterial({ map: colorTexture });
 const mesh = new T.Mesh(geometry, material);
 scene.add(mesh);
-
-// --- Tweakpane 调试面板 ---
-const pane = new Pane();
-const cubeFolder = pane.addFolder({
-  title: "Cube控制",
-});
-
-cubeFolder.addBinding(mesh.position, "y", {
-  min: -3,
-  max: 3,
-  label: "Y方向",
-});
-
-cubeFolder.addBinding(mesh, "visible");
-// 线框模式
-cubeFolder.addBinding(material, "wireframe");
-// 颜色
-// https://tweakpane.github.io/docs/input-bindings/#color
-// 创建颜色对象用于Tweakpane
-const colorObject = {
-  color: "#" + material.color.getHexString(),
-};
-
-cubeFolder
-  .addBinding(colorObject, "color", {
-    picker: "inline",
-    expanded: true,
-    // view 设置为 'color' 表示得到hex颜色值
-    view: "color",
-  })
-  .on("change", (ev) => {
-    material.color.set(ev.value);
-  });
-
-// 添加按钮，旋转一圈
-cubeFolder
-  .addButton({
-    title: "Rotation",
-  })
-  .on("click", () => {
-    gsap.to(mesh.rotation, {
-      duration: 1,
-      y: mesh.rotation.y + Math.PI * 2,
-    });
-  });
-
-// 线框细分widthSegments, heightSegments, depthSegments
-cubeFolder
-  .addBinding(
-    {
-      subdivision: 2,
-    },
-    "subdivision",
-    {
-      min: 1,
-      max: 10,
-      step: 1,
-    },
-  )
-  .on("change", (ev) => {
-    // 只在用户完成交互时执行（ev.last 为 true）
-    // 用于实现 lil-gui 中 `finishChange` 效果
-    if (ev.last) {
-      // 创建之前先销毁
-      mesh.geometry.dispose();
-      mesh.geometry = new T.BoxGeometry(1, 1, 1, ev.value, ev.value, ev.value);
-    }
-  });
 
 const axisHelper = new T.AxesHelper(2);
 scene.add(axisHelper);
