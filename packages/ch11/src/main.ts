@@ -1,6 +1,6 @@
 import * as T from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { HDRLoader } from "three/examples/jsm/loaders/HDRLoader.js";
+// import { HDRLoader } from "three/examples/jsm/loaders/HDRLoader.js";
 import { Pane } from "tweakpane";
 
 // Canvas
@@ -50,137 +50,261 @@ mapcapTexture.colorSpace = T.SRGBColorSpace;
 
 // Objects
 
-/** MeshBasicMaterial 基础材质 */
-// const material = new T.MeshBasicMaterial({
-//   map: doorColorTexture,
-// });
+// 准备 gradient 纹理用于 Toon 材质
+gradientTexture.minFilter = T.NearestFilter;
+gradientTexture.magFilter = T.NearestFilter;
+gradientTexture.generateMipmaps = false;
 
-// material.transparent = true;
-// // // 要想opacity生效，必须先设置上面的 👆🏻 transparent 属性为true
-// // material.opacity = 0.5;
-// // alphaMap 白色部分可见，黑色部分隐藏
-// material.alphaMap = doorAlphaTexture; // 透明图贴图
-// material.side = T.DoubleSide;
+/**
+ * 材质工厂函数
+ */
+function createMaterial(type: string): T.Material {
+  switch (type) {
+    case "MeshBasicMaterial":
+      /** MeshBasicMaterial 基础材质 */
+      const basicMat = new T.MeshBasicMaterial({
+        map: doorColorTexture,
+      });
+      basicMat.transparent = true;
+      // 要想opacity生效，必须先设置上面的 👆🏻 transparent 属性为true
+      basicMat.alphaMap = doorAlphaTexture; // 透明图贴图 - 白色部分可见，黑色部分隐藏
+      basicMat.side = T.DoubleSide;
+      return basicMat;
 
-/** MeshNormalMaterial 网格法线材质 */
-// const material = new T.MeshNormalMaterial();
-// material.flatShading = true; // 材质是否用平面着色渲染
-// material.wireframe = true;
+    case "MeshNormalMaterial":
+      /** MeshNormalMaterial 网格法线材质 */
+      const normalMat = new T.MeshNormalMaterial();
+      normalMat.flatShading = true; // 材质是否用平面着色渲染
+      return normalMat;
 
-/** MeshMatcapMaterial 网格材质捕获材质 */
-// Matcap -> Material Capture
-// const material = new T.MeshMatcapMaterial();
-// material.matcap = mapcapTexture;
+    case "MeshMatcapMaterial":
+      /** MeshMatcapMaterial 网格材质捕获材质 */
+      // Matcap -> Material Capture
+      const matcapMat = new T.MeshMatcapMaterial();
+      matcapMat.matcap = mapcapTexture;
+      return matcapMat;
 
-/** MeshDepthMaterial 网格深度材质 */
-// 多用于后期处理，阴影
-// const material = new T.MeshDepthMaterial();
+    case "MeshDepthMaterial":
+      /** MeshDepthMaterial 网格深度材质 */
+      // 多用于后期处理，阴影
+      return new T.MeshDepthMaterial();
 
-/** MeshLambertMaterial 网格拉伯特材质 */
-// 它需要光源，它是使用光源中性能最好的材质
-// const material = new T.MeshLambertMaterial();
+    case "MeshLambertMaterial":
+      /** MeshLambertMaterial 网格拉伯特材质 */
+      // 它需要光源，它是使用光源中性能最好的材质
+      return new T.MeshLambertMaterial();
 
-/** MeshPhongMaterial 网格冯氏材质 */
-// 它需要光源，但它比拉伯特材质性能更好
-// const material = new T.MeshPhongMaterial();
-// material.shininess = 100;
-// material.specular = new T.Color("#118ab2"); // 点光源反射颜色
+    case "MeshPhongMaterial":
+      /** MeshPhongMaterial 网格冯氏材质 */
+      // 它需要光源，但它比拉伯特材质性能更好
+      const phongMat = new T.MeshPhongMaterial();
+      phongMat.shininess = 100;
+      phongMat.specular = new T.Color("#118ab2"); // 点光源反射颜色
+      return phongMat;
 
-/** MeshToonMaterial 网格卡通材质 */
-// 可实现 塞尔达 类似的材质效果
-// const material = new T.MeshToonMaterial();
-// gradientTexture.minFilter = T.NearestFilter;
-// gradientTexture.magFilter = T.NearestFilter;
-// gradientTexture.generateMipmaps = false;
-// material.gradientMap = gradientTexture;
+    case "MeshToonMaterial":
+      /** MeshToonMaterial 网格卡通材质 */
+      // 可实现 塞尔达 类似的材质效果
+      const toonMat = new T.MeshToonMaterial();
+      toonMat.gradientMap = gradientTexture;
+      return toonMat;
 
-/** MeshStandardMaterial 网格标准材质 */
-// const material = new T.MeshStandardMaterial();
+    case "MeshStandardMaterial":
+      /** MeshStandardMaterial 网格标准材质 */
+      const standardMat = new T.MeshStandardMaterial();
+      standardMat.metalness = 0.7;
+      standardMat.roughness = 0.2;
+      standardMat.map = doorColorTexture;
+      standardMat.aoMap = doorAmbientOcclusionTexture;
+      standardMat.aoMapIntensity = 1;
+      standardMat.displacementMap = doorHeightTexture;
+      standardMat.displacementScale = 0.1;
+      standardMat.metalnessMap = doorMetalnessTexture;
+      standardMat.roughnessMap = doorRoughnessTexture;
+      standardMat.normalMap = doorNormalTexture;
+      standardMat.normalScale.set(0.5, 0.5);
+      return standardMat;
 
-// material.metalness = 0.7;
-// material.roughness = 0.2;
-// material.map = doorColorTexture;
-// material.aoMap = doorAmbientOcclusionTexture;
-// material.aoMapIntensity = 1;
-// material.displacementMap = doorHeightTexture;
-// material.displacementScale = 0.1;
-// material.metalnessMap = doorMetalnessTexture;
-// material.roughnessMap = doorRoughnessTexture;
-// material.normalMap = doorNormalTexture;
-// material.normalScale.set(0.5, 0.5);
+    case "MeshPhysicalMaterial":
+      /** MeshPhysicalMaterial 网格物理材质 */
+      // 比较消耗性能的材质
+      const physicalMat = new T.MeshPhysicalMaterial();
+      physicalMat.metalness = 0.7;
+      physicalMat.roughness = 0.2;
+      physicalMat.map = doorColorTexture;
+      physicalMat.aoMap = doorAmbientOcclusionTexture;
+      physicalMat.aoMapIntensity = 1;
+      physicalMat.displacementMap = doorHeightTexture;
+      physicalMat.displacementScale = 0.1;
+      physicalMat.metalnessMap = doorMetalnessTexture;
+      physicalMat.roughnessMap = doorRoughnessTexture;
+      physicalMat.normalMap = doorNormalTexture;
+      physicalMat.normalScale.set(0.5, 0.5);
+      // 相比 MeshStandardMaterial 多的属性
+      physicalMat.clearcoat = 1; // 清漆 比较耗费性能
+      physicalMat.clearcoatRoughness = 0.1;
+      // Sheen 织物
+      // physicalMat.sheen = 1;
+      // physicalMat.sheenRoughness = 0.25;
+      // physicalMat.sheenColor.set(1, 1, 1); // 菲涅尔效应 边缘出现高亮
+      // 出现肥皂泡或者油在水面上出现的彩虹色🌈
+      // physicalMat.iridescence = 1;
+      // physicalMat.iridescenceIOR = 1;
+      // physicalMat.iridescenceThicknessRange = [100, 800];
+      // 透射
+      // physicalMat.transmission = 1; // 透射率
+      // physicalMat.ior = 1.5; // 折射率 index of refraction
+      // physicalMat.thickness = 0.5; // 透射厚度
+      return physicalMat;
 
-/** MeshPhysicalMaterial 网格物理材质 */
-// 比较消耗性能的材质
-const material = new T.MeshPhysicalMaterial();
+    default:
+      return new T.MeshStandardMaterial();
+  }
+}
 
-material.metalness = 0.7;
-material.roughness = 0.2;
-material.map = doorColorTexture;
-material.aoMap = doorAmbientOcclusionTexture;
-material.aoMapIntensity = 1;
-material.displacementMap = doorHeightTexture;
-material.displacementScale = 0.1;
-material.metalnessMap = doorMetalnessTexture;
-material.roughnessMap = doorRoughnessTexture;
-material.normalMap = doorNormalTexture;
-material.normalScale.set(0.5, 0.5);
+// 初始材质
+let currentMaterial = createMaterial("MeshPhysicalMaterial");
 
-// 相比 MeshStandardMaterial 多的属性
-material.clearcoat = 1; // 清漆 比较耗费性能
-material.clearcoatRoughness = 0.1;
-
-// Sheen 织物
-// material.sheen = 1;
-// material.sheenRoughness = 0.25;
-// material.sheenColor.set(1, 1, 1); // 菲涅尔效应 边缘出现高亮
-
-// 出现肥皂泡或者油在水面上出现的彩虹色🌈
-// material.iridescence = 1;
-// material.iridescenceIOR = 1;
-// material.iridescenceThicknessRange = [100, 800];
-
-// 透射
-// material.transmission = 1; // 透射率
-// material.ior = 1.5; // 折射率 index of refraction
-// material.thickness = 0.5; // 透射厚度
-
-// Tweakpane
-const pane = new Pane();
-const folder = pane.addFolder({
-  title: "Material",
-});
-folder.addBinding(material, "metalness", {
-  min: 0,
-  max: 1,
-  step: 0.001,
-});
-folder.addBinding(material, "roughness", {
-  min: 0,
-  max: 1,
-  step: 0.001,
-});
-
-folder.addBinding(material, "clearcoat", {
-  min: 0,
-  max: 1,
-  step: 0.001,
-});
-folder.addBinding(material, "clearcoatRoughness", {
-  min: 0,
-  max: 1,
-  step: 0.001,
-});
-
-const sphere = new T.Mesh(new T.SphereGeometry(0.5, 16, 16), material);
+const sphere = new T.Mesh(new T.SphereGeometry(0.5, 64, 64), currentMaterial);
 sphere.position.x = -1.5;
 
-const plane = new T.Mesh(new T.PlaneGeometry(1, 1), material);
+const plane = new T.Mesh(new T.PlaneGeometry(1, 1, 100, 100), currentMaterial);
 plane.position.x = 0;
 
-const torus = new T.Mesh(new T.TorusGeometry(0.3, 0.2, 16, 32), material);
+const torus = new T.Mesh(new T.TorusGeometry(0.3, 0.2, 64, 128), currentMaterial);
 torus.position.x = 1.5;
 
 scene.add(sphere, plane, torus);
+
+/**
+ * Tweakpane 控制面板
+ */
+const pane = new Pane();
+
+// 材质选择器
+const materialParams = {
+  materialType: "MeshPhysicalMaterial",
+};
+
+const materialFolder = pane.addFolder({
+  title: "Material Type",
+  expanded: true,
+});
+
+materialFolder
+  .addBinding(materialParams, "materialType", {
+    label: "Type",
+    options: {
+      Basic: "MeshBasicMaterial",
+      Normal: "MeshNormalMaterial",
+      Matcap: "MeshMatcapMaterial",
+      Depth: "MeshDepthMaterial",
+      Lambert: "MeshLambertMaterial",
+      Phong: "MeshPhongMaterial",
+      Toon: "MeshToonMaterial",
+      Standard: "MeshStandardMaterial",
+      Physical: "MeshPhysicalMaterial",
+    },
+  })
+  .on("change", (ev) => {
+    // 销毁旧材质
+    currentMaterial.dispose();
+    // 创建新材质
+    currentMaterial = createMaterial(ev.value);
+    // 更新所有网格的材质
+    sphere.material = currentMaterial;
+    plane.material = currentMaterial;
+    torus.material = currentMaterial;
+    // 更新控制面板
+    updateMaterialControls(ev.value);
+  });
+
+// 材质属性控制文件夹
+let controlsFolder = pane.addFolder({
+  title: "Material Properties",
+  expanded: true,
+});
+
+/**
+ * 更新材质控制选项
+ */
+function updateMaterialControls(materialType: string) {
+  // 移除旧的控制项
+  controlsFolder.dispose();
+  controlsFolder = pane.addFolder({
+    title: "Material Properties",
+    expanded: true,
+  });
+
+  const mat = currentMaterial as any;
+
+  switch (materialType) {
+    case "MeshBasicMaterial":
+      controlsFolder.addBinding(mat, "opacity", { min: 0, max: 1, step: 0.01 });
+      controlsFolder.addBinding(mat, "transparent");
+      controlsFolder.addBinding(mat, "wireframe");
+      break;
+
+    case "MeshNormalMaterial":
+      controlsFolder.addBinding(mat, "flatShading");
+      controlsFolder.addBinding(mat, "wireframe");
+      break;
+
+    case "MeshMatcapMaterial":
+      controlsFolder.addBinding(mat, "flatShading");
+      break;
+
+    case "MeshDepthMaterial":
+      controlsFolder.addBinding(mat, "wireframe");
+      break;
+
+    case "MeshLambertMaterial":
+      controlsFolder.addBinding(mat, "wireframe");
+      break;
+
+    case "MeshPhongMaterial":
+      controlsFolder.addBinding(mat, "shininess", { min: 0, max: 200, step: 1 });
+      controlsFolder.addBinding(mat, "wireframe");
+      break;
+
+    case "MeshToonMaterial":
+      controlsFolder.addBinding(mat, "wireframe");
+      break;
+
+    case "MeshStandardMaterial":
+      controlsFolder.addBinding(mat, "metalness", { min: 0, max: 1, step: 0.001 });
+      controlsFolder.addBinding(mat, "roughness", { min: 0, max: 1, step: 0.001 });
+      controlsFolder.addBinding(mat, "aoMapIntensity", { min: 0, max: 2, step: 0.01 });
+      controlsFolder.addBinding(mat, "displacementScale", { min: 0, max: 1, step: 0.01 });
+      controlsFolder.addBinding(mat, "wireframe");
+      break;
+
+    case "MeshPhysicalMaterial":
+      controlsFolder.addBinding(mat, "metalness", { min: 0, max: 1, step: 0.001 });
+      controlsFolder.addBinding(mat, "roughness", { min: 0, max: 1, step: 0.001 });
+      controlsFolder.addBinding(mat, "aoMapIntensity", { min: 0, max: 2, step: 0.01 });
+      controlsFolder.addBinding(mat, "displacementScale", { min: 0, max: 1, step: 0.01 });
+
+      const advancedFolder = controlsFolder.addFolder({
+        title: "Advanced (Physical)",
+        expanded: false,
+      });
+      advancedFolder.addBinding(mat, "clearcoat", { min: 0, max: 1, step: 0.001 });
+      advancedFolder.addBinding(mat, "clearcoatRoughness", { min: 0, max: 1, step: 0.001 });
+      // 可选：取消注释以启用更多高级属性
+      // advancedFolder.addBinding(mat, "sheen", { min: 0, max: 1, step: 0.001 });
+      // advancedFolder.addBinding(mat, "sheenRoughness", { min: 0, max: 1, step: 0.001 });
+      // advancedFolder.addBinding(mat, "iridescence", { min: 0, max: 1, step: 0.001 });
+      // advancedFolder.addBinding(mat, "transmission", { min: 0, max: 1, step: 0.001 });
+      // advancedFolder.addBinding(mat, "ior", { min: 1, max: 2.333, step: 0.001 });
+
+      controlsFolder.addBinding(mat, "wireframe");
+      break;
+  }
+}
+
+// 初始化控制面板
+updateMaterialControls("MeshPhysicalMaterial");
 
 // Sizes
 const sizes = {
