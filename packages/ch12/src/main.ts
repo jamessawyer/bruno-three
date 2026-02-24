@@ -91,26 +91,54 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
   scene.add(textMesh);
 
   /** 随机甜甜圈🍩 */
+  // console.time("donuts");
+  // // 🚀 材质和几何体是可以复用的，因此不要写在for循环中，这样性能更好
+  // const donutGeometry = new T.TorusGeometry(0.3, 0.2, 20, 45);
+  //
+  // for (let i = 0; i < 100; i++) {
+  //   const donutMesh = new T.Mesh(donutGeometry, commonMaterial);
+  //   donutMesh.position.x = (Math.random() - 0.5) * 10;
+  //   donutMesh.position.y = (Math.random() - 0.5) * 10;
+  //   donutMesh.position.z = (Math.random() - 0.5) * 10;
+  //
+  //   // 随机旋转
+  //   donutMesh.rotation.x = Math.random() * Math.PI;
+  //   donutMesh.rotation.y = Math.random() * Math.PI;
+  //
+  //   // 随机大小
+  //   const scale = Math.random();
+  //   donutMesh.scale.set(scale, scale, scale);
+  //
+  //   scene.add(donutMesh);
+  // }
+  // console.timeEnd("donuts");
+
+  // 绘制甜甜圈🍩的方式2：InstancedMesh
+  // 🔥🔥 用 InstancedMesh 会更省 draw calls（从 100 次 mesh 绘制变成 1 次），在甜甜圈数量更大时提升会更明显
+
   console.time("donuts");
   // 🚀 材质和几何体是可以复用的，因此不要写在for循环中，这样性能更好
   const donutGeometry = new T.TorusGeometry(0.3, 0.2, 20, 45);
+  const donutCount = 100;
+  const donutMesh = new T.InstancedMesh(donutGeometry, commonMaterial, donutCount);
 
-  for (let i = 0; i < 100; i++) {
-    const donutMesh = new T.Mesh(donutGeometry, commonMaterial);
-    donutMesh.position.x = (Math.random() - 0.5) * 10;
-    donutMesh.position.y = (Math.random() - 0.5) * 10;
-    donutMesh.position.z = (Math.random() - 0.5) * 10;
+  const dummy = new T.Object3D();
+  for (let i = 0; i < donutCount; i++) {
+    dummy.position.set(
+      (Math.random() - 0.5) * 10,
+      (Math.random() - 0.5) * 10,
+      (Math.random() - 0.5) * 10,
+    );
+    dummy.rotation.set(Math.random() * Math.PI, Math.random() * Math.PI, 0);
 
-    // 随机旋转
-    donutMesh.rotation.x = Math.random() * Math.PI;
-    donutMesh.rotation.y = Math.random() * Math.PI;
-
-    // 随机大小
     const scale = Math.random();
-    donutMesh.scale.set(scale, scale, scale);
+    dummy.scale.set(scale, scale, scale);
 
-    scene.add(donutMesh);
+    dummy.updateMatrix();
+    donutMesh.setMatrixAt(i, dummy.matrix);
   }
+  donutMesh.instanceMatrix.needsUpdate = true;
+  scene.add(donutMesh);
   console.timeEnd("donuts");
 });
 
