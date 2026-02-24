@@ -2,6 +2,7 @@ import * as T from "three";
 import { FontLoader } from "three/examples/jsm/Addons.js";
 import { TextGeometry } from "three/addons/geometries/TextGeometry.js";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { Pane } from "tweakpane";
 
 // Canvas
 const canvas = document.getElementById("app") as HTMLCanvasElement;
@@ -13,7 +14,45 @@ const scene = new T.Scene();
  * 纹理
  */
 const textureLoader = new T.TextureLoader();
-const matcapTexture = textureLoader.load("/textures/matcaps/8.png");
+let matcapTexture = textureLoader.load("/textures/matcaps/8.png");
+matcapTexture.colorSpace = T.SRGBColorSpace;
+
+let commonMaterial: T.MeshMatcapMaterial | null = null;
+
+const debugPane = new Pane({ title: "Matcap" });
+const debugParams = {
+  matcap: "8",
+};
+
+const applyMatcap = (id: string) => {
+  const next = textureLoader.load(`/textures/matcaps/${id}.png`);
+  next.colorSpace = T.SRGBColorSpace;
+
+  if (matcapTexture && matcapTexture !== next) matcapTexture.dispose();
+  matcapTexture = next;
+
+  if (!commonMaterial) return;
+  commonMaterial.matcap = matcapTexture;
+  commonMaterial.needsUpdate = true;
+};
+
+debugPane
+  .addBinding(debugParams, "matcap", {
+    label: "matcap",
+    options: {
+      "1": "1",
+      "2": "2",
+      "3": "3",
+      "4": "4",
+      "5": "5",
+      "6": "6",
+      "7": "7",
+      "8": "8",
+    },
+  })
+  .on("change", (ev) => {
+    applyMatcap(ev.value);
+  });
 
 /**
  * 字体
@@ -45,7 +84,7 @@ fontLoader.load("/fonts/helvetiker_regular.typeface.json", (font) => {
   // 居中方式2 - 直接使用 center() 位移进行居中 （它内部已经调用了 computeBoundingBox()）
   textGeometry.center();
 
-  const commonMaterial = new T.MeshMatcapMaterial({
+  commonMaterial = new T.MeshMatcapMaterial({
     matcap: matcapTexture,
   });
   const textMesh = new T.Mesh(textGeometry, commonMaterial);
