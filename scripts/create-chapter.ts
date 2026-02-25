@@ -60,7 +60,16 @@ await write(
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Three.js + Vite 7: ${name}</title>
-    <style>body { margin: 0; overflow: hidden; background: #111; }</style>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        overflow: hidden;
+        background: #111;
+        display: grid;
+        place-items: center;
+      }
+    </style>
   </head>
   <body>
     <canvas id="app"></canvas>
