@@ -15,7 +15,7 @@ const pane = new Pane();
  * 📚 只有 PointLight, DirectionalLight, SpotLight 可以投射阴影
  */
 // 环境光
-const ambientLight = new T.AmbientLight(0xffffff, 0.4);
+const ambientLight = new T.AmbientLight(0xffffff, 0.2);
 scene.add(ambientLight);
 const amibientFolder = pane.addFolder({
   title: "Ambient Light",
@@ -27,7 +27,7 @@ amibientFolder.addBinding(ambientLight, "intensity", {
 });
 
 // 平行光
-const directionalLight = new T.DirectionalLight(0xffffff, 0.4);
+const directionalLight = new T.DirectionalLight(0xffffff, 0.9);
 directionalLight.position.set(2, 2, -1);
 scene.add(directionalLight);
 // 平行光投射阴影
@@ -59,7 +59,11 @@ scene.add(directionalLightCameraHelper);
 const directionalFolder = pane.addFolder({
   title: "Directional Light",
 });
-
+directionalFolder.addBinding(directionalLight, "intensity", {
+  min: 0,
+  max: 4,
+  step: 0.1,
+});
 directionalFolder.addBinding(directionalLight.position, "x", {
   min: -5,
   max: 5,
@@ -87,7 +91,7 @@ directionalFolder.addBinding(directionalLight.shadow, "radius", {
 });
 
 // 聚光灯
-const spotLight = new T.SpotLight(0xffffff, 0.4, 10, Math.PI * 0.3);
+const spotLight = new T.SpotLight(0xffffff, 3, 20, Math.PI * 0.3);
 spotLight.castShadow = true;
 spotLight.shadow.mapSize.set(1024, 1024);
 spotLight.shadow.camera.fov = 30;
@@ -108,8 +112,8 @@ const spotLightFolder = pane.addFolder({
 });
 spotLightFolder.addBinding(spotLight, "intensity", {
   min: 0,
-  max: 1,
-  step: 0.001,
+  max: 4,
+  step: 0.1,
 });
 spotLightFolder.addBinding(spotLightCameraHelper, "visible", {
   value: false,
@@ -214,7 +218,9 @@ renderer.shadowMap.enabled = true;
 // 一般会通过 directionalLight.shadow.mapSize 设置为更小的值达到模糊的效果
 // export const PCFSoftShadowMap: 2;
 // export const VSMShadowMap: 3; // 性能比较差
-renderer.shadowMap.type = T.PCFSoftShadowMap;
+renderer.shadowMap.type = T.PCFShadowMap;
+renderer.toneMapping = T.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.5; // 提高整体亮度
 
 const clock = new T.Clock();
 
