@@ -120,6 +120,36 @@ spotLightFolder.addBinding(spotLightCameraHelper, "visible", {
   label: "Shadow Camera Helper",
 });
 
+// 点光源（位置在球体左上方，能照到球体和地面）
+const pointLight = new T.PointLight(0xffffff, 3);
+pointLight.position.set(-1, 1, 0);
+pointLight.castShadow = true;
+pointLight.shadow.mapSize.set(1024, 1024);
+pointLight.shadow.camera.near = 0.1;
+pointLight.shadow.camera.far = 5;
+scene.add(pointLight);
+
+// 点光源的摄像机是透视摄像机
+// 这里可能渲染的辅助器方向朝向随机方向
+// 这是因为 点光源的阴影是用「立方体 6 个面」算出来的，你看到的辅助器只是其中一个方向的相机。
+const pointLightCameraHelper = new T.CameraHelper(pointLight.shadow.camera);
+pointLightCameraHelper.visible = false;
+scene.add(pointLightCameraHelper);
+
+const pointLightFolder = pane.addFolder({
+  title: "Point Light",
+});
+
+pointLightFolder.addBinding(pointLight, "intensity", {
+  min: 0,
+  max: 4,
+  step: 0.1,
+});
+pointLightFolder.addBinding(pointLightCameraHelper, "visible", {
+  value: false,
+  label: "Shadow Camera Helper",
+});
+
 /**
  * Objects
  */
