@@ -47,7 +47,10 @@ scene.add(floor);
  */
 // Ambient light
 const ambientLight = new T.AmbientLight("#ffffff", 0.5);
-pane.addBinding(ambientLight, "intensity", {
+const ambientLightFolder = pane.addFolder({
+  title: "Ambient Light",
+});
+ambientLightFolder.addBinding(ambientLight, "intensity", {
   min: 0,
   max: 1,
   step: 0.001,
@@ -57,22 +60,25 @@ scene.add(ambientLight);
 // Directional light
 const moonLight = new T.DirectionalLight("#ffffff", 0.5);
 moonLight.position.set(4, 5, -2);
-pane.addBinding(moonLight, "intensity", {
+const moonLightFolder = pane.addFolder({
+  title: "Moon Light",
+});
+moonLightFolder.addBinding(moonLight, "intensity", {
   min: 0,
   max: 1,
-  step: 0.001,
+  step: 0.1,
 });
-pane.addBinding(moonLight.position, "x", {
+moonLightFolder.addBinding(moonLight.position, "x", {
   min: -5,
   max: 5,
   step: 0.001,
 });
-pane.addBinding(moonLight.position, "y", {
+moonLightFolder.addBinding(moonLight.position, "y", {
   min: -5,
   max: 5,
   step: 0.001,
 });
-pane.addBinding(moonLight.position, "z", {
+moonLightFolder.addBinding(moonLight.position, "z", {
   min: -5,
   max: 5,
   step: 0.001,
@@ -93,10 +99,12 @@ window.addEventListener("resize", () => {
 /**
  * Animate
  */
-const clock = new T.Clock();
+// r163 中使用 Timer 来获取时间
+const timer = new T.Timer();
 
 const tick = () => {
-  const elapsedTime = clock.getElapsedTime();
+  timer.update();
+  const elapsedTime = timer.getElapsed();
 
   // Update controls
   controls.update();
