@@ -82,13 +82,13 @@ await write(
 await write(
   join(targetDir, "src/main.ts"),
   `
-import * as THREE from 'three';
+import * as T from 'three';
 import { Pane } from 'tweakpane';
 
 // --- 初始化场景 ---
-const scene = new THREE.Scene();
-const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
-const renderer = new THREE.WebGLRenderer({ 
+const scene = new T.Scene();
+const camera = new T.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+const renderer = new T.WebGLRenderer({ 
   canvas: document.getElementById('app') as HTMLCanvasElement, 
   antialias: true 
 });
@@ -96,9 +96,9 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
 // --- 添加物体 ---
-const geometry = new THREE.IcosahedronGeometry(1, 4);
-const material = new THREE.MeshNormalMaterial({ wireframe: true });
-const mesh = new THREE.Mesh(geometry, material);
+const geometry = new T.IcosahedronGeometry(1, 4);
+const material = new T.MeshNormalMaterial({ wireframe: true });
+const mesh = new T.Mesh(geometry, material);
 scene.add(mesh);
 camera.position.z = 3;
 
