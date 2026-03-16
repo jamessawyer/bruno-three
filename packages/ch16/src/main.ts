@@ -146,7 +146,16 @@ graveColorTexture.repeat.set(0.3, 0.4);
 graveARMTexture.repeat.set(0.3, 0.4);
 graveNormalTexture.repeat.set(0.3, 0.4);
 
-// texture - door
+// texture - Door
+const doorColorTexture = textureLoader.load("/textures/door/color.webp");
+const doorAlphaTexture = textureLoader.load("/textures/door/alpha.webp");
+const doorAmbientOcclusionTexture = textureLoader.load("/textures/door/ambientOcclusion.webp");
+const doorMetalnessTexture = textureLoader.load("/textures/door/metalness.webp");
+const doorRoughnessTexture = textureLoader.load("/textures/door/roughness.webp");
+const doorNormalTexture = textureLoader.load("/textures/door/normal.webp");
+const doorHeightTexture = textureLoader.load("/textures/door/height.webp");
+
+doorColorTexture.colorSpace = T.SRGBColorSpace;
 
 /**
  * Camera
@@ -243,8 +252,20 @@ house.add(roof);
 
 // Door 房门
 const door = new T.Mesh(
-  new T.PlaneGeometry(2.2, 2.2),
-  new T.MeshStandardMaterial({ color: "white" }),
+  new T.PlaneGeometry(2.2, 2.2, 100, 100),
+  new T.MeshStandardMaterial({
+    // color: "white",
+    map: doorColorTexture,
+    alphaMap: doorAlphaTexture,
+    transparent: true,
+    aoMap: doorAmbientOcclusionTexture,
+    roughnessMap: doorRoughnessTexture,
+    metalnessMap: doorMetalnessTexture,
+    normalMap: doorNormalTexture,
+    displacementMap: doorHeightTexture,
+    displacementScale: 0.15,
+    displacementBias: -0.04,
+  }),
 );
 door.position.y = 1;
 door.position.z = 2 + 0.01; // +0.01 是为了防止 z-fighting
