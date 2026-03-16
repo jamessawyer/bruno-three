@@ -15,7 +15,7 @@ const scene = new T.Scene();
  */
 const textureLoader = new T.TextureLoader();
 
-// floor
+// texture - floor
 // alpha map
 //    -> 控制物体的透明度，决定哪些部分可见，哪些部分不可见。
 //    -> 黑白图像：白色 = 完全不透明，黑色 = 完全透明。
@@ -78,6 +78,18 @@ floorDisplacementTexture.wrapT = T.RepeatWrapping;
 
 floorColorTexture.colorSpace = T.SRGBColorSpace;
 
+// texture - Wall
+const wallColorTexture = textureLoader.load(
+  "/textures/wall/castle_brick_broken_06_1k/castle_brick_broken_06_diff_1k.webp",
+);
+const wallARMTexture = textureLoader.load(
+  "/textures/wall/castle_brick_broken_06_1k/castle_brick_broken_06_arm_1k.webp",
+);
+const wallNormalTexture = textureLoader.load(
+  "/textures/wall/castle_brick_broken_06_1k/castle_brick_broken_06_nor_gl_1k.webp",
+);
+wallColorTexture.colorSpace = T.SRGBColorSpace;
+
 // Camera
 const camera = new T.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 // camera.position.set(4, 2, 5);
@@ -139,7 +151,14 @@ scene.add(house);
 // Walls 墙壁
 const walls = new T.Mesh(
   new T.BoxGeometry(4, 2.5, 4),
-  new T.MeshStandardMaterial({ color: "#a9c388" }),
+  new T.MeshStandardMaterial({
+    // color: "#a9c388",
+    map: wallColorTexture,
+    aoMap: wallARMTexture,
+    roughnessMap: wallARMTexture,
+    metalnessMap: wallARMTexture,
+    normalMap: wallNormalTexture,
+  }),
 );
 walls.position.y = 2.5 / 2;
 house.add(walls);
