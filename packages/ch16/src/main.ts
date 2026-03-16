@@ -90,6 +90,18 @@ const wallNormalTexture = textureLoader.load(
 );
 wallColorTexture.colorSpace = T.SRGBColorSpace;
 
+// texture - Roof
+const roofColorTexture = textureLoader.load(
+  "/textures/roof/roof_slates_02_1k/roof_slates_02_diff_1k.webp",
+);
+const roofARMTexture = textureLoader.load(
+  "/textures/roof/roof_slates_02_1k/roof_slates_02_arm_1k.webp",
+);
+const roofNormalTexture = textureLoader.load(
+  "/textures/roof/roof_slates_02_1k/roof_slates_02_nor_gl_1k.webp",
+);
+roofColorTexture.colorSpace = T.SRGBColorSpace;
+
 // Camera
 const camera = new T.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 // camera.position.set(4, 2, 5);
@@ -166,7 +178,14 @@ house.add(walls);
 // Roof 屋顶
 const roof = new T.Mesh(
   new T.ConeGeometry(3.5, 1.5, 4),
-  new T.MeshStandardMaterial({ color: "red" }),
+  new T.MeshStandardMaterial({
+    // color: "red",
+    map: roofColorTexture,
+    aoMap: roofARMTexture,
+    roughnessMap: roofARMTexture,
+    metalnessMap: roofARMTexture,
+    normalMap: roofNormalTexture,
+  }),
 );
 roof.position.y = 2.5 + 1.5 / 2;
 roof.rotation.y = Math.PI / 4;
