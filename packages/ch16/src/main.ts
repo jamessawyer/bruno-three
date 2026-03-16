@@ -130,6 +130,22 @@ bushColorTexture.wrapS = T.RepeatWrapping;
 bushARMTexture.wrapS = T.RepeatWrapping;
 bushNormalTexture.wrapS = T.RepeatWrapping;
 
+// texture - Graves
+const graveColorTexture = textureLoader.load(
+  "/textures/grave/plastered_stone_wall_1k/plastered_stone_wall_diff_1k.webp",
+);
+const graveARMTexture = textureLoader.load(
+  "/textures/grave/plastered_stone_wall_1k/plastered_stone_wall_arm_1k.webp",
+);
+const graveNormalTexture = textureLoader.load(
+  "/textures/grave/plastered_stone_wall_1k/plastered_stone_wall_nor_gl_1k.webp",
+);
+graveColorTexture.colorSpace = T.SRGBColorSpace;
+
+graveColorTexture.repeat.set(0.3, 0.4);
+graveARMTexture.repeat.set(0.3, 0.4);
+graveNormalTexture.repeat.set(0.3, 0.4);
+
 // texture - door
 
 /**
@@ -271,7 +287,14 @@ house.add(bush4);
 
 // Graves 坟墓
 const graveGeometry = new T.BoxGeometry(0.6, 0.8, 0.2);
-const graveMaterial = new T.MeshStandardMaterial({ color: "pink" });
+const graveMaterial = new T.MeshStandardMaterial({
+  // color: "pink",
+  map: graveColorTexture,
+  aoMap: graveARMTexture,
+  roughnessMap: graveARMTexture,
+  metalnessMap: graveARMTexture,
+  normalMap: graveNormalTexture,
+});
 
 const graves = new T.Group();
 scene.add(graves);
