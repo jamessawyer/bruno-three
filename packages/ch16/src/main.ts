@@ -110,6 +110,26 @@ roofColorTexture.wrapS = T.RepeatWrapping;
 roofARMTexture.wrapS = T.RepeatWrapping;
 roofNormalTexture.wrapS = T.RepeatWrapping;
 
+// texture - Bush
+const bushColorTexture = textureLoader.load(
+  "/textures/bush/leaves_forest_ground_1k/leaves_forest_ground_diff_1k.webp",
+);
+const bushARMTexture = textureLoader.load(
+  "/textures/bush/leaves_forest_ground_1k/leaves_forest_ground_arm_1k.webp",
+);
+const bushNormalTexture = textureLoader.load(
+  "/textures/bush/leaves_forest_ground_1k/leaves_forest_ground_nor_gl_1k.webp",
+);
+bushColorTexture.colorSpace = T.SRGBColorSpace;
+
+bushColorTexture.repeat.set(2, 1);
+bushARMTexture.repeat.set(2, 1);
+bushNormalTexture.repeat.set(2, 1);
+
+bushColorTexture.wrapS = T.RepeatWrapping;
+bushARMTexture.wrapS = T.RepeatWrapping;
+bushNormalTexture.wrapS = T.RepeatWrapping;
+
 // texture - door
 
 /**
@@ -216,26 +236,37 @@ house.add(door);
 
 // Bushes
 const bushGeometry = new T.SphereGeometry(1, 16, 16);
-const bushMaterial = new T.MeshStandardMaterial({ color: "green" });
+const bushMaterial = new T.MeshStandardMaterial({
+  color: "#ccffcc",
+  map: bushColorTexture,
+  aoMap: bushARMTexture,
+  roughnessMap: bushARMTexture,
+  metalnessMap: bushARMTexture,
+  normalMap: bushNormalTexture,
+});
 
 const bush1 = new T.Mesh(bushGeometry, bushMaterial);
 bush1.scale.setScalar(0.5); // 缩放 0.5 倍
 bush1.position.set(0.8, 0.2, 2.2);
+bush1.rotation.x = -0.75; // 用于隐藏顶部贴图的扭曲问题
 house.add(bush1);
 
 const bush2 = new T.Mesh(bushGeometry, bushMaterial);
 bush2.scale.setScalar(0.25); // 缩放 0.25 倍
 bush2.position.set(1.4, 0.1, 2.1);
+bush2.rotation.x = -0.75;
 house.add(bush2);
 
 const bush3 = new T.Mesh(bushGeometry, bushMaterial);
 bush3.scale.setScalar(0.4);
 bush3.position.set(-0.8, 0.1, 2.2);
+bush3.rotation.x = -0.75;
 house.add(bush3);
 
 const bush4 = new T.Mesh(bushGeometry, bushMaterial);
 bush4.scale.setScalar(0.15);
 bush4.position.set(-1, 0.05, 2.6);
+bush4.rotation.x = -0.75;
 house.add(bush4);
 
 // Graves 坟墓
