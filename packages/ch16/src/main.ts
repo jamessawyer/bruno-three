@@ -102,12 +102,26 @@ const roofNormalTexture = textureLoader.load(
 );
 roofColorTexture.colorSpace = T.SRGBColorSpace;
 
-// Camera
+roofColorTexture.repeat.set(3, 1);
+roofARMTexture.repeat.set(3, 1);
+roofNormalTexture.repeat.set(3, 1);
+
+roofColorTexture.wrapS = T.RepeatWrapping;
+roofARMTexture.wrapS = T.RepeatWrapping;
+roofNormalTexture.wrapS = T.RepeatWrapping;
+
+// texture - door
+
+/**
+ * Camera
+ */
 const camera = new T.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 // camera.position.set(4, 2, 5);
 camera.position.set(4, 10, 10);
 
-// Renderer
+/**
+ * Renderer
+ */
 const renderer = new T.WebGLRenderer({
   canvas,
   antialias: true,
