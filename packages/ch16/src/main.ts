@@ -383,6 +383,14 @@ const doorLight = new T.PointLight("#ff7d46", 5);
 doorLight.position.set(0, 2.2, 2.5);
 house.add(doorLight);
 
+/**
+ * Ghosts 幽灵 用灯光模拟
+ */
+const ghost1 = new T.PointLight("#8800ff", 6);
+const ghost2 = new T.PointLight("#ff0088", 6);
+const ghost3 = new T.PointLight("#ff0000", 6);
+scene.add(ghost1, ghost2, ghost3);
+
 // Axis Helper
 const axisHelper = new T.AxesHelper(12);
 scene.add(axisHelper);
@@ -407,6 +415,34 @@ const timer = new T.Timer();
 const tick = () => {
   timer.update();
   const elapsedTime = timer.getElapsed();
+
+  // Ghost
+  const ghost1Angle = elapsedTime * 0.5;
+  const ghost1X = Math.cos(ghost1Angle) * 4;
+  const ghost1Z = Math.sin(ghost1Angle) * 4;
+  ghost1.position.x = ghost1X;
+  ghost1.position.z = ghost1Z;
+  // 让幽灵在空中飘动，产生一个随机的飘动效果
+  ghost1.position.y =
+    Math.sin(ghost1Angle) * Math.sin(ghost1Angle * 2.34) * Math.sin(ghost1Angle * 3.45);
+
+  // 让Ghost2反方向运动
+  const ghost2Angle = -elapsedTime * 0.38;
+  const ghost2X = Math.cos(ghost2Angle) * 5;
+  const ghost2Z = Math.sin(ghost2Angle) * 5;
+  ghost2.position.x = ghost2X;
+  ghost2.position.z = ghost2Z;
+  ghost2.position.y =
+    Math.sin(ghost2Angle) * Math.sin(ghost2Angle * 2.34) * Math.sin(ghost2Angle * 3.45);
+
+  // Ghost3
+  const ghost3Angle = elapsedTime * 0.23;
+  const ghost3X = Math.cos(ghost3Angle) * 6;
+  const ghost3Z = Math.sin(ghost3Angle) * 6;
+  ghost3.position.x = ghost3X;
+  ghost3.position.z = ghost3Z;
+  ghost3.position.y =
+    Math.sin(ghost3Angle) * Math.sin(ghost3Angle * 2.34) * Math.sin(ghost3Angle * 3.45);
 
   // Update controls
   controls.update();
