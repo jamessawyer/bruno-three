@@ -339,7 +339,7 @@ for (let i = 0; i < 30; i++) {
  * Lights
  */
 // Ambient light
-const ambientLight = new T.AmbientLight("#ffffff", 0.5);
+const ambientLight = new T.AmbientLight("#86cdff", 0.275);
 const ambientLightFolder = pane.addFolder({
   title: "Ambient Light",
 });
@@ -351,8 +351,8 @@ ambientLightFolder.addBinding(ambientLight, "intensity", {
 scene.add(ambientLight);
 
 // Directional light
-const moonLight = new T.DirectionalLight("#ffffff", 0.5);
-moonLight.position.set(4, 5, -2);
+const moonLight = new T.DirectionalLight("#86cdff", 1);
+moonLight.position.set(3, 2, -8);
 const moonLightFolder = pane.addFolder({
   title: "Moon Light",
 });
@@ -377,6 +377,11 @@ moonLightFolder.addBinding(moonLight.position, "z", {
   step: 0.001,
 });
 scene.add(moonLight);
+
+// Door Light
+const doorLight = new T.PointLight("#ff7d46", 5);
+doorLight.position.set(0, 2.2, 2.5);
+house.add(doorLight);
 
 // Axis Helper
 const axisHelper = new T.AxesHelper(12);
