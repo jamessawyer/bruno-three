@@ -467,6 +467,12 @@ window.addEventListener("resize", () => {
 });
 
 /**
+ * Frog
+ */
+// scene.fog = new T.Fog("#04343f", 10, 13);
+scene.fog = new T.FogExp2("#04343f", 0.1);
+
+/**
  * Animate
  */
 // r163 中使用 Timer 来获取时间
