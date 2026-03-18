@@ -165,16 +165,6 @@ const camera = new T.PerspectiveCamera(75, window.innerWidth / window.innerHeigh
 camera.position.set(4, 10, 10);
 
 /**
- * Renderer
- */
-const renderer = new T.WebGLRenderer({
-  canvas,
-  antialias: true,
-});
-renderer.setSize(window.innerWidth, window.innerHeight);
-renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-
-/**
  * House
  */
 
@@ -354,7 +344,7 @@ scene.add(ambientLight);
 const moonLight = new T.DirectionalLight("#86cdff", 1);
 moonLight.position.set(3, 2, -8);
 const moonLightFolder = pane.addFolder({
-  title: "Moon Light",
+  title: "Moon Light(平行光)",
 });
 moonLightFolder.addBinding(moonLight, "intensity", {
   min: 0,
@@ -378,6 +368,16 @@ moonLightFolder.addBinding(moonLight.position, "z", {
 });
 scene.add(moonLight);
 
+// add shadow helper
+const moonLightShadowHelper = new T.CameraHelper(moonLight.shadow.camera);
+moonLightShadowHelper.visible = false;
+scene.add(moonLightShadowHelper);
+
+moonLightFolder.addBinding(moonLightShadowHelper, "visible", {
+  value: false,
+  label: "Shadow Helper",
+});
+
 // Door Light
 const doorLight = new T.PointLight("#ff7d46", 5);
 doorLight.position.set(0, 2.2, 2.5);
@@ -398,6 +398,53 @@ scene.add(axisHelper);
 // Controls
 const controls = new OrbitControls(camera, canvas);
 controls.enableDamping = true;
+
+/**
+ * Renderer
+ */
+const renderer = new T.WebGLRenderer({
+  canvas,
+  antialias: true,
+});
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+
+/**
+ * Shadows
+ */
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = T.PCFSoftShadowMap;
+
+// Cast and Receive Shadows
+moonLight.castShadow = true;
+ghost1.castShadow = true;
+ghost2.castShadow = true;
+ghost3.castShadow = true;
+
+walls.castShadow = true;
+walls.receiveShadow = true;
+roof.castShadow = true;
+floor.receiveShadow = true;
+graves.children.forEach((grave) => {
+  grave.castShadow = true;
+  grave.receiveShadow = true;
+});
+
+moonLight.shadow.mapSize.set(256, 256);
+// 平行光的阴影相机是正交摄像机
+moonLight.shadow.camera.top = 8;
+moonLight.shadow.camera.bottom = -8;
+moonLight.shadow.camera.left = -8;
+moonLight.shadow.camera.right = 8;
+moonLight.shadow.camera.near = 1;
+moonLight.shadow.camera.far = 20;
+
+ghost1.shadow.mapSize.set(256, 256);
+ghost2.shadow.mapSize.set(256, 256);
+ghost3.shadow.mapSize.set(256, 256);
+ghost1.shadow.camera.far = 10;
+ghost2.shadow.camera.far = 10;
+ghost3.shadow.camera.far = 10;
 
 // --- 适配窗口 ---
 window.addEventListener("resize", () => {
