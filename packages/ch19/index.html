@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Three.js + Vite 7: ch19</title>
+    <style>
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: #111;
+        display: grid;
+        place-items: center;
+      }
+      #app {
+        position: fixed;
+        top: 0;
+        left: 0;
+        outline: none;
+      }
+
+      .section {
+        display: flex;
+        align-items: center;
+        height: 100vh;
+        position: relative;
+        font-family: "Cabin", sans-serif;
+        color: #ffeded;
+        text-transform: uppercase;
+        font-size: 7vmin;
+        padding-left: 10%;
+        padding-right: 10%;
+      }
+
+      section:nth-child(odd) {
+        justify-content: flex-end;
+      }
+    </style>
+  </head>
+  <body>
+    <canvas id="app"></canvas>
+
+    <section class="section">
+      <h1>My Portfolio</h1>
+    </section>
+    <section class="section">
+      <h2>My projects</h2>
+    </section>
+    <section class="section">
+      <h2>Contact me</h2>
+    </section>
+
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
